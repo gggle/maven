@@ -21,15 +21,14 @@ import kr.or.ddit.CommonException;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.ICommandHandler;
 import kr.or.ddit.vo.MemberVO;
 
-@WebServlet("/member/memberUpdate.do")
-public class MemberUpdateServlet extends HttpServlet {
+public class MemberUpdateController implements ICommandHandler {
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
-		req.setCharacterEncoding("UTF-8");
 		MemberVO member = new MemberVO();
 		req.setAttribute("member", member);
 		try {
@@ -40,7 +39,6 @@ public class MemberUpdateServlet extends HttpServlet {
 
 		String goPage = null;
 
-		boolean isRedirect = false;
 		String message = null;
 		Map<String, String> errors = new LinkedHashMap<>();
 		req.setAttribute("errors", errors);
@@ -53,29 +51,23 @@ public class MemberUpdateServlet extends HttpServlet {
 			ServiceResult result = service.modifyMember(member);
 			switch (result) {
 			case INVALIDPASSWORD:
-				goPage = "/WEB-INF/views/member/memberView.jsp";
+				goPage = "member/memberView";
 				message = "비밀번호 불일치";
 				break;
 			case FAILED:
-				goPage = "/WEB-INF/views/member/memberView.jsp";
+				goPage = "member/memberView";
 				message = "서버 오류로 인한 실패";
 				break;
 			case OK:
 				//goPage = "/member/memberView.do?who="+member.getMem_id();
-				goPage = "/member/mypage.do";
-				isRedirect = true;
+				goPage = "redirect:/member/mypage.do";
 				break;
 			}
 			req.setAttribute("message", message);
 		} else {
-			goPage = "/WEB-INF/views/member/memberView.jsp";
+			goPage = "member/memberView";
 		}
-		if (isRedirect) {
-			resp.sendRedirect(req.getContextPath() + goPage);
-		} else {
-			RequestDispatcher rd = req.getRequestDispatcher(goPage);
-			rd.forward(req, resp);
-		}
+		return goPage;
 	}
 
 	// 통과를 하지 못하면 memberview.jsp

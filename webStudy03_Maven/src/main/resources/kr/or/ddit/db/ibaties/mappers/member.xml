@@ -33,11 +33,21 @@
 	TO_DATE(#mem_memorialday#,'YYYY-MM-DD'), 1000 ,'role_user'
 	)                                   
 	</insert>
-	
-	<select id="selectMemList" resultClass="memberVO">
-		<include refid="Member.selectMemberFrag"/>
-		ORDER BY ROWID DESC                       
+	<select id="selectTotalRecord" resultClass="long">
+	SELECT COUNT(*)
+	FROM MEMBER
 	</select>
+	<select id="selectMemberList" resultClass="memberVO" parameterClass="pagingVO">
+      SELECT B.*
+      FROM(
+         SELECT ROWNUM RNUM, A.*
+         FROM(
+            <include refid="Member.selectMemberFrag" />
+            ORDER BY ROWID DESC ) A) B
+         <![CDATA[
+            WHERE RNUM >= #startRow# AND RNUM <= #endRow#
+         ]]>
+   </select>
 	<update id="updateMember" parameterClass="memberVO">
 		 update member set mem_name = #mem_name#,mem_zip =#mem_zip#, mem_add1=#mem_add1#,
 		 mem_add2=#mem_add2#,mem_hometel=#mem_hometel#,mem_comtel=#mem_comtel#,mem_hp=#mem_hp#,

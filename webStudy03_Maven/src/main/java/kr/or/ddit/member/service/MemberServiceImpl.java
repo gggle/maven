@@ -7,6 +7,7 @@ import kr.or.ddit.ServiceResult;
 import kr.or.ddit.member.dao.IMemberDAO;
 import kr.or.ddit.member.dao.MemberDAOImpl;
 import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PagingInfoVO;
 
 public class MemberServiceImpl implements IMemberService {
 	
@@ -31,8 +32,8 @@ public class MemberServiceImpl implements IMemberService {
 	}
 
 	@Override
-	public List<MemberVO> retrieveMemberList() {
-		 List<MemberVO> memberList = memberDAO.selectMemList();
+	public List<MemberVO> retrieveMemberList(PagingInfoVO pagingVO) {
+		 List<MemberVO> memberList = memberDAO.selectMemList(pagingVO);
 		 
 		return memberList;
 	}
@@ -80,6 +81,11 @@ public class MemberServiceImpl implements IMemberService {
 			result = ServiceResult.INVALIDPASSWORD;
 		}
 		return result;
+	}
+
+	@Override
+	public long retrieveMemberCount(PagingInfoVO pagingVO) {
+		return memberDAO.selectTotalRecord(pagingVO);
 	}
 
 }

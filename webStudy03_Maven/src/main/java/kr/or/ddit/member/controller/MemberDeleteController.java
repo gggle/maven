@@ -21,12 +21,12 @@ import kr.or.ddit.CommonException;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.ICommandHandler;
 import kr.or.ddit.vo.MemberVO;
-@WebServlet("/member/memberDelete.do")
-public class MemberDeleteServlet extends HttpServlet {
+public class MemberDeleteController implements ICommandHandler {
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// id 패스워드를 받아 온다.
 		// 아이디 패스워드가 누락이면 불통
 		// 리무브 멤버 로 로직 작성
@@ -42,7 +42,6 @@ public class MemberDeleteServlet extends HttpServlet {
 
 		String goPage = null;
 
-		boolean isRedirect = false;
 		String message = null;
 		Map<String, String> errors = new LinkedHashMap<>();
 		req.setAttribute("errors", errors);
@@ -57,35 +56,27 @@ public class MemberDeleteServlet extends HttpServlet {
 			case INVALIDPASSWORD:
 				//goPage = "/WEB-INF/views/member/memberView.do";
 				System.out.println("여기타나요?");
-				goPage = "/member/mypage.do";
+				goPage = "redirect:/member/mypage.do";
 				message = "비밀번호 불일치";
-				isRedirect = true;
 				break;
 			case FAILED:
 				//goPage = "/WEB-INF/views/member/memberView.jsp";
 				goPage = "/member/mypage.do";
 				message = "서버 오류로 인한 실패";
-				isRedirect = true;
 				break;
 			case OK:
-				goPage = "/common/message.jsp";
+				goPage = "redirect:/common/message.jsp";
 				message = "탈퇴약관 : 일주일이내 같은 아이디 가입 불가";
 				req.getSession().setAttribute("goLink", "/"); // 웰컴페이지 링크
 				req.getSession().setAttribute("isRemoved", new Boolean(true)); // 웰컴페이지 링크
 				//req.getSession().invalidate(); // 세션 만료
-				isRedirect = true;
 				break;
 			}
 			req.getSession().setAttribute("message", message);
 		} else {
-			goPage = "/WEB-INF/views/member/memberView.jsp";
+			goPage = "member/memberView";
 		}
-		if (isRedirect) {
-			resp.sendRedirect(req.getContextPath() + goPage);
-		} else {
-			RequestDispatcher rd = req.getRequestDispatcher(goPage);
-			rd.forward(req, resp);
-		}
+		return goPage;
 	}
 
 	// 통과를 하지 못하면 memberview.jsp

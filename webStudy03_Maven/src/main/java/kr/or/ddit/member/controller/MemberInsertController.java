@@ -9,8 +9,6 @@ import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,22 +19,32 @@ import kr.or.ddit.CommonException;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.ICommandHandler;
 import kr.or.ddit.vo.MemberVO;
 
-@WebServlet("/member/memberInsert.do") // uri
-public class MemberInsertServlet extends HttpServlet {
+public class MemberInsertController implements ICommandHandler {
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String view = "/WEB-INF/views/member/memberForm.jsp";
-		RequestDispatcher rd = req.getRequestDispatcher(view);
-		rd.forward(req, resp);
+	public String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String method = req.getMethod();
+		String view = null;
+		if("get".equalsIgnoreCase(method)) {
+			view = doGet(req,resp);
+		}else if("post".equalsIgnoreCase(method)) {
+			view = doPost(req,resp);
+		}else {
+			resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+		}
+		return view;
 	}
 
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 1. 한글/특수문자 방지
-		req.setCharacterEncoding("UTF-8");
+	protected String doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String view = "member/memberForm";
+		return view;
+
+	}
+
+	protected String doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		// 2. 파라미터값 가져오기(하드코딩X)
 		// MemberVO member = new MemberVO();
@@ -51,7 +59,6 @@ public class MemberInsertServlet extends HttpServlet {
 
 		String goPage = null;
 
-		boolean isRedirect = false;
 		String message = null;
 		Map<String, String> errors = new LinkedHashMap<>();
 		req.setAttribute("errors", errors);
@@ -63,28 +70,22 @@ public class MemberInsertServlet extends HttpServlet {
 			ServiceResult result = service.registMember(member);
 			switch (result) {
 			case PKDUPLICATED:
-				goPage = "/WEB-INF/views/member/memberForm.jsp";
+				goPage = "member/memberForm";
 				message = "아이디중복";
 				break;
 			case FAILED:
-				goPage = "/WEB-INF/views/member/memberForm.jsp";
+				goPage = "member/memberForm";
 				message = "서버 오류로 인한 실패";
 				break;
 			case OK:
-				goPage = "/member/memberList.do";
-				isRedirect = true;
+				goPage = "redirect:/member/memberList.do";
 				break;
 			}
 			req.setAttribute("message", message);
 		} else {
-			goPage = "/WEB-INF/views/member/memberForm.jsp";
+			goPage = "member/memberForm";
 		}
-		if (isRedirect) {
-			resp.sendRedirect(req.getContextPath() + goPage);
-		} else {
-			RequestDispatcher rd = req.getRequestDispatcher(goPage);
-			rd.forward(req, resp);
-		}
+		return goPage;
 	}
 
 	private boolean validate(MemberVO member, Map<String, String> errors) {
