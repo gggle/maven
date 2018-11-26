@@ -23,13 +23,17 @@ public class MemberListController implements ICommandHandler{
 
    public String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
       //2. 요청분석(주소, 파라미터, 메서드, 헤더들...)
+	   String searchWord = req.getParameter("searchWord");
+	   String searchType = req.getParameter("searchType");
       int currentPage = 1;
       String page = req.getParameter("page");
       if(StringUtils.isNumeric(page)) {
          currentPage = Integer.parseInt(page);
       }
-      PagingInfoVO pagingVO = new PagingInfoVO(5,2); // 스크린 사이즈 블럭 사이즈
+      PagingInfoVO<MemberVO> pagingVO = new PagingInfoVO(5,2); // 스크린 사이즈 블럭 사이즈
       pagingVO.setCurrentPage(currentPage);
+      pagingVO.setSearchWord(searchWord);
+      pagingVO.setSearchType(searchType);
       //3. BLL 과의 의존관계 형성
       IMemberService service = new MemberServiceImpl();
       //4. 로직선택   -> service.retrieveMemberList();

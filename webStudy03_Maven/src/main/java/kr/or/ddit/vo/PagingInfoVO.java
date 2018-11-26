@@ -15,7 +15,7 @@ import lombok.ToString;
  */
 @Data
 @NoArgsConstructor
-public class PagingInfoVO {
+public class PagingInfoVO<T> {
    
    private long totalRecord;
    private int screenSize = 10;
@@ -26,7 +26,11 @@ public class PagingInfoVO {
    private long endPage;
    private long startRow;
    private long endRow;
-   private List<MemberVO> dataList;
+   private List<T> dataList;
+   private T searchVO;
+   private String searchWord;
+   private String searchType;
+   private String funcName = "paging";
    
    
    public void setTotalRecord(long totalRecord) {
@@ -51,7 +55,7 @@ public class PagingInfoVO {
     */
    
    public String getPagingHTML() {
-      String pattern = "<li class='page-item %s'><a class='page-link' href='?page=%d'>%s</a></li>";
+	   String pattern = "<li class='page-item %s'><a class='page-link' href='javascript:"+funcName+"(%d);'>%s</a></li>";
       StringBuffer html = new StringBuffer();
       html.append("<ul class=\'pagination\'>");
       if(startPage > 1) {
