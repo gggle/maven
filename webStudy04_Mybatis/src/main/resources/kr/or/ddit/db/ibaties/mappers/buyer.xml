@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Buyer">
+
+<select id="selectAllBuyer" resultClass="buyerVO">
+    SELECT
+    buyer_id,buyer_name, buyer_lgu, buyer_bank, buyer_bankno,
+    buyer_bankname, buyer_zip, buyer_add1, buyer_add2, buyer_comtel,
+    buyer_fax, buyer_mail, buyer_charger, buyer_telext
+	FROM
+    buyer                 
+</select>
+
+<select id="selectBuyer" parameterClass="string" resultClass="buyerVO">
+	SELECT
+    buyer_id,buyer_name, buyer_lgu, buyer_bank, buyer_bankno,
+    buyer_bankname, buyer_zip, buyer_add1, buyer_add2, buyer_comtel,
+    buyer_fax, buyer_mail, buyer_charger, buyer_telext
+	FROM
+    buyer
+    where buyer_id = #buyer_id#
+</select>
+<insert id="insertBuyer" parameterClass="buyerVO">
+<selectKey resultClass="string" keyProperty="buyer_id">
+			select #buyer_lgu#||lpad(nvl(to_number( substr( MAX(buyer_id),5)),0)+1,2,'0') from prod where buyer_lgu = #buyer_lgu#
+</selectKey>
+INSERT INTO buyer (
+    buyer_id,    buyer_name,
+    buyer_lgu,    buyer_bank,
+    buyer_bankno,    buyer_bankname,
+    buyer_zip,    buyer_add1,
+    buyer_add2,    buyer_comtel,
+    buyer_fax,    buyer_mail,
+    buyer_charger,    buyer_telext
+) VALUES (
+     #buyer_id#,    #buyer_name#,
+    #buyer_lgu#,    #buyer_bank#,
+    #buyer_bankno#,    #buyer_bankname#,
+    #buyer_zip#,    #buyer_add1#,
+    #buyer_add2#,    #buyer_comtel#,
+    #buyer_fax#,    #buyer_mail#,
+    #buyer_charger#,    #buyer_telext#
+);
+</insert>
+</sqlMap>
