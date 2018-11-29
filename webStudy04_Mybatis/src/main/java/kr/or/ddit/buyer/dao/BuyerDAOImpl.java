@@ -1,39 +1,43 @@
 package kr.or.ddit.buyer.dao;
 
-import java.sql.SQLException;
 import java.util.List;
 
-import com.ibatis.sqlmap.client.SqlMapClient;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 
-import kr.or.ddit.db.ibaties.CustomSqlMapClientBuilder;
+import kr.or.ddit.mybatis.CustomSqlSessionFactoryBuilder;
 import kr.or.ddit.vo.BuyerVO;
 
 public class BuyerDAOImpl implements IBuyerDAO {
 
-	SqlMapClient sqlMapClient = CustomSqlMapClientBuilder.getSqlMapClient();
+	SqlSessionFactory sqlSessionFactory = CustomSqlSessionFactoryBuilder.getSqlSessionFactory();
+	
 	@Override
 	public List<BuyerVO> selectAllBuyer() {
-		try {
-			return sqlMapClient.queryForList("Buyer.selectAllBuyer");
-			}catch (SQLException e) {
-				throw new RuntimeException(e);
-			}
+		 try(
+		      SqlSession session = sqlSessionFactory.openSession();
+		 ) {
+		     IBuyerDAO mapper = session.getMapper(IBuyerDAO.class);
+		     return mapper.selectAllBuyer();
+		     }
 	}
 	@Override
 	public BuyerVO selectBuyer(String buyer_id) {
-		try {
-			return (BuyerVO) sqlMapClient.queryForObject("Buyer.selectBuyer",buyer_id);
-			}catch (SQLException e) {
-				throw new RuntimeException(e);
-			}
+		try(
+				 SqlSession session = sqlSessionFactory.openSession();
+				 ) {
+			IBuyerDAO mapper = session.getMapper(IBuyerDAO.class);
+			 return mapper.selectBuyer(buyer_id);
+		 }
 	}
 	@Override
 	public String insertBuyer(BuyerVO buyer) {
-		try {
-				return (String) sqlMapClient.insert("Buyer.inseryBuyer",buyer);
-			}catch (SQLException e) {
-				throw new RuntimeException(e);
-			}
+		try(
+				 SqlSession session = sqlSessionFactory.openSession();
+				 ) {
+			IBuyerDAO mapper = session.getMapper(IBuyerDAO.class);
+			 return mapper.insertBuyer(buyer);
+		 }
 	}
 
 }

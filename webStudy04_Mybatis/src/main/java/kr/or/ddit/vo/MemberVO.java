@@ -48,4 +48,8 @@ public class MemberVO implements Serializable{
 	public String getAddress(){
 		return Objects.toString(mem_add1,"")+" "+Objects.toString(mem_add2,"");
 	}
+	
+	public String getAddressTest() {
+		return "테스트";
+	}
 }

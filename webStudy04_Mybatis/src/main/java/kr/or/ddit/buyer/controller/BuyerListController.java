@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import kr.or.ddit.buyer.dao.BuyerDAOImpl;
 import kr.or.ddit.buyer.dao.IBuyerDAO;
+import kr.or.ddit.buyer.service.IBuyerService;
+import kr.or.ddit.buyer.service.IBuyerServiceImpl;
 import kr.or.ddit.mvc.ICommandHandler;
 import kr.or.ddit.vo.BuyerVO;
 
@@ -23,8 +25,8 @@ public class BuyerListController implements ICommandHandler{
 		// 객체에 담기
 		
 		List<BuyerVO> buyerList = new ArrayList<BuyerVO>();
-		IBuyerDAO buyerDAO = new BuyerDAOImpl();
-		buyerList = buyerDAO.selectAllBuyer();
+		IBuyerService service = new IBuyerServiceImpl();
+		buyerList = service.selectAllBuyer();
 		req.setAttribute("buyerList", buyerList);
 		return "buyer/buyerList";
 	}

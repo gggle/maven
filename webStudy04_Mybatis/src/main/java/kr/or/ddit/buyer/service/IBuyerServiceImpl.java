@@ -17,11 +17,8 @@ public class IBuyerServiceImpl implements IBuyerService {
 	 */
 	@Override
 	public List<BuyerVO> selectAllBuyer() {
-		BuyerVO buyer = (BuyerVO) buyerDAO.selectAllBuyer();
-		if (buyer == null) {
-			throw new CommonException();
-		}
-		return (List<BuyerVO>) buyer;
+		List<BuyerVO> buyerlist = buyerDAO.selectAllBuyer();
+		return buyerlist;
 	}
 
 	/**
@@ -43,10 +40,12 @@ public class IBuyerServiceImpl implements IBuyerService {
 	public ServiceResult insertBuyer(BuyerVO buyer) {
 		String newBuyer = buyerDAO.insertBuyer(buyer);
 		ServiceResult result = null;
-		if(newBuyer == null) {
-			result = ServiceResult.FAILED;
-		}else {
+		System.out.println("1차 로 여기는 오나요 ?");
+		if(newBuyer != null) {
+			System.out.println("여기 타나요 ?");
 			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
 		}
 		return result;
 	}

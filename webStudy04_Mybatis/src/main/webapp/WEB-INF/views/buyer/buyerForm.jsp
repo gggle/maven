@@ -1,8 +1,11 @@
+<%@page import="java.util.List"%>
+<%@page import="java.util.Map"%>
 <%@page import="kr.or.ddit.vo.BuyerVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 	<%
 	BuyerVO buyer = (BuyerVO)request.getAttribute("buyer");
+	List<Map<String,Object>> buyerList = (List) request.getAttribute("buyerList");
 	%>
 <!DOCTYPE html>
 <html>
@@ -11,7 +14,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<form action="">
+<form method="post">
 	<table>
 	<thead>
 	<tr>
@@ -19,12 +22,23 @@
 	<tr>
 		<th>buyer_name</th>
 		<td><input type="text" name="buyer_name"
-			value="<%=buyer.getBuyer_name()%>" /></td>
+			value="${buyer.buyer_name}" /></td>
 	</tr>
 	<tr>
 		<th>buyer_lgu</th>
-		<td><input type="text" name="buyer_lgu"
-			value="<%=buyer.getBuyer_lgu()%>" /></td>
+		<td><div class="input-group">
+					<select name="buyer_lgu">
+						<option value="">분류선택</option>
+						<%
+// 							for(Map<String, Object> buyerLgu : buyerList){
+								%>
+<%-- 								<option value="${buyer.buyer_lgu}">${buyer.buyer_lgu}</option> --%>
+								<%
+// 							}
+						%>
+					</select>
+					<span class="input-group-text error">${errors["buyer_lgu"]}</span>
+				</div></td>
 	</tr>
 	<tr>
 		<th>buyer_bank</th>

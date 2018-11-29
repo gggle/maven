@@ -16,15 +16,15 @@
 	<table>
 		<tr>
 			<th>상품코드</th>
-			<td><%=prod.getProd_id()%></td>
+			<td>${prod.prod_id}</td>
 		</tr>
 		<tr>
 			<th>상품명</th>
-			<td><%=prod.getProd_name()%></td>
+			<td>${prod.prod_name}</td>
 		</tr>
 		<tr>
 			<th>분류명</th>
-			<td><%=prod.getLprod_nm()%></td>
+			<td>${prod.lprod_nm}</td>
 		</tr>
 		<tr>
 			<th>거래처정보</th>
@@ -40,10 +40,10 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td><%=prod.getBuyer().getBuyer_name() %></td>
-							<td><%=prod.getBuyer().getBuyer_add1() %></td>
-							<td><%=prod.getBuyer().getBuyer_charger() %></td>
-							<td><%=prod.getBuyer().getBuyer_comtel() %></td>
+							<td>${prod.buyer.buyer_name}</td>
+							<td>${prod.buyer.buyer_add1}</td>
+							<td>${prod.buyer.buyer_charger}</td>
+							<td>${prod.buyer.buyer_comtel}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -51,67 +51,67 @@
 		</tr>
 		<tr>
 			<th>구매가</th>
-			<td><%=prod.getProd_cost()%></td>
+			<td>${prod.prod_cost}</td>
 		</tr>
 		<tr>
 			<th>판매가</th>
-			<td><%=prod.getProd_price()%></td>
+			<td>${prod.prod_price}</td>
 		</tr>
 		<tr>
 			<th>특판가</th>
-			<td><%=prod.getProd_sale()%></td>
+			<td>${prod.prod_sale}</td>
 		</tr>
 		<tr>
 			<th>상품개요</th>
-			<td><%=prod.getProd_outline()%></td>
+			<td>${prod.prod_outline}</td>
 		</tr>
 		<tr>
 			<th>상세정보</th>
-			<td><%=prod.getProd_detail()%></td>
+			<td>${prod.prod_detail}</td>
 		</tr>
 		<tr>
 			<th>이미지경로</th>
-			<td><%=prod.getProd_img()%></td>
+			<td>${prod.prod_img}</td>
 		</tr>
 		<tr>
 			<th>재고량</th>
-			<td><%=prod.getProd_totalstock()%></td>
+			<td>${prod.prod_totalstock}</td>
 		</tr>
 		<tr>
 			<th>입고일</th>
-			<td><%=prod.getProd_insdate()%></td>
+			<td>${prod.prod_insdate}</td>
 		</tr>
 		<tr>
 			<th>적정재고</th>
-			<td><%=prod.getProd_properstock()%></td>
+			<td>${prod.prod_properstock}</td>
 		</tr>
 		<tr>
 			<th>상품크기</th>
-			<td><%=prod.getProd_size()%></td>
+			<td>${prod.prod_size}</td>
 		</tr>
 		<tr>
 			<th>상품색상</th>
-			<td><%=prod.getProd_color()%></td>
+			<td>${prod.prod_color}</td>
 		</tr>
 		<tr>
 			<th>배송방법</th>
-			<td><%=prod.getProd_delivery()%></td>
+			<td>${prod.prod_delivery}</td>
 		</tr>
 		<tr>
 			<th>단위</th>
-			<td><%=prod.getProd_unit()%></td>
+			<td>${prod.prod_unit}</td>
 		</tr>
 		<tr>
 			<th>입고량</th>
-			<td><%=prod.getProd_qtyin()%></td>
+			<td>${prod.prod_qtyin}</td>
 		</tr>
 		<tr>
 			<th>판매량</th>
-			<td><%=prod.getProd_qtysale()%></td>
+			<td>${prod.prod_qtysale}</td>
 		</tr>
 		<tr>
 			<th>마일리지</th>
-			<td><%=prod.getProd_mileage()%></td>
+			<td>${prod.prod_mileage}</td>
 		</tr>
 	</table>
 	<%
@@ -120,7 +120,7 @@
 		authorized = authMember !=null &&"role_admin".equals(authMember.getMem_auth());
 		if(authorized){
 	%>
-	<input type="button" value="상품수정" onclick="location.href='<%=request.getContextPath() %>/prod/prodUpdate.do?what=<%=prod.getProd_id() %>'" />
+	<input type="button" value="상품수정" onclick="location.href='${pageContext.request.contextPath }/prod/prodUpdate.do?what=<%=prod.getProd_id() %>'" />
 	<h4>구매자 목록</h4>
 	<table>
 		<thead>
@@ -137,13 +137,14 @@
 			List<MemberVO> customers =  prod.getCustomers();
 			if(customers!=null && customers.size() > 0){
 				for(MemberVO tmp : customers){
+					 pageContext.setAttribute("tmp", tmp);
 					%>
 					<tr>
-						<td><%=tmp.getMem_id() %></td>
-						<td><%=tmp.getMem_name() %></td>
-						<td><%=tmp.getAddress() %></td>
-						<td><%=tmp.getMem_hp() %></td>
-						<td><%=tmp.getMem_mail() %></td>
+						<td>${tmp.mem_id}</td>
+						<td>${tmp.mem_name}</td>
+						<td>${member.getAddress}</td>
+						<td>${tmp.mem_hp}</td>
+						<td>${tmp.mem_mail}</td>
 					</tr>
 					<%
 				}

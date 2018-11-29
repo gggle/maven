@@ -20,11 +20,11 @@
 <title>Insert title here</title>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 <script type="text/javascript" 
-	src="<%=request.getContextPath() %>/js/jquery-3.3.1.min.js"></script>
+	src="${pageContext.request.contextPath }/js/jquery-3.3.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <script type="text/javascript">
-	function <%=pagingVO.getFuncName() %>(page){
+	function ${pagingVO.funcName}(page){
 		$("[name='searchForm']").find("[name='page']").val(page);
 		//document.searchForm.page.value=page;
 		$("[name='searchForm']").submit();
@@ -50,7 +50,7 @@
 		var listBody = $("#listBody");
 		listBody.on("click", "tr" ,function(){
 			var prod_id = $(this).find("td:first").text();
-			location.href = "<%=request.getContextPath()%>/prod/prodView.do?what="+prod_id;
+			location.href = "${pageContext.request.contextPath }/prod/prodView.do?what="+prod_id;
 		});
 		 $("[name='searchForm']").on("submit",function(event){
 			event.preventDefault();
@@ -98,7 +98,7 @@
 		<%
 			for(Map<String,Object> lprod : lprodList){
 				%>
-				<option value="<%=lprod.get("LPROD_GU")%>"><%=lprod.get("LPROD_NM")%></option>
+				<option value="${lprod.lprod_gu}">${lprod.lprod_nm}</option><!--체크  -->
 				<%
 			}
 		%>
@@ -108,7 +108,7 @@
 		<%
 			for(BuyerVO buyer : buyerList){
 				%>
-				<option value="<%=buyer.getBuyer_id() %>" class="<%=buyer.getBuyer_lgu()%>"><%=buyer.getBuyer_name() %></option>
+				<option value="${buyer.buyer_id}" class="${buyer.buyer_lgu}">${buyer.buyer_name}</option>
 				<%
 			}
 		%>
@@ -117,7 +117,7 @@
 	<input type="submit" value="검색" />
 </form>
 <input type="button" class="btn btn-info" value="신규상품등록" 
-	onclick="location.href='<%=request.getContextPath() %>/prod/prodInsert.do';"
+	onclick="location.href='${pageContext.request.contextPath }/prod/prodInsert.do';"
 />
 <table class="table">
 	<thead>
@@ -135,15 +135,16 @@
 		<%
 			if(prodList.size()>0){
 				for(ProdVO prod : prodList){
+					 pageContext.setAttribute("prod", prod);
 					%>
 					<tr>
-						<td><%=prod.getProd_id() %></td>
-						<td><%=prod.getProd_name() %></td>
-						<td><%=prod.getLprod_nm() %></td>
-						<td><%=prod.getBuyer_name() %></td>
-						<td><%=prod.getProd_price() %></td>
-						<td><%=prod.getProd_outline() %></td>
-						<td><%=prod.getProd_mileage() %></td>
+						<td>${prod.prod_id}</td>
+						<td>${prod.prod_name} </td>
+						<td>${prod.lprod_nm}</td>
+						<td>${prod.buyer_name}</td>
+						<td>${prod.prod_price}</td>
+						<td>${prod.prod_outline}</td>
+						<td>${prod.prod_mileage}</td>
 					</tr>
 					<%
 				}
@@ -160,7 +161,7 @@
 		<tr>
 			<td colspan="7">
 				<nav aria-label="Page navigation example" id="pagingArea">
-					<%=pagingVO.getPagingHTML() %>
+					${pagingVO.pagingHTML}
 				</nav>
 			</td>
 		</tr>
